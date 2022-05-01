@@ -1,2 +1,2 @@
-# LAB2-Classification
-LAB2 分类
+# LAB2
+LAB2分类问题
