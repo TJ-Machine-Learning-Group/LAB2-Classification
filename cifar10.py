@@ -31,7 +31,7 @@ if __name__ == '__main__':
     epoch = config.epoch
     learn_rate = config.learn_rate
     weight_decay = config.weight_decay
-    model_savepath = config.model_savepath
+    model_savepath = 'CIFAR10' + config.model_savepath
 
     # prepare data
     train_loader, train_count, test_loader, test_count = prepare_cifar10()
