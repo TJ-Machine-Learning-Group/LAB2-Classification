@@ -10,6 +10,7 @@ def getHeatMap(CM:List[List[int]],labels:List[any],path:str) ->None:
     #temp = list(reversed(labels))
     temp =labels
     result = pd.DataFrame(data=CM,index=temp,columns=labels,dtype=int)
+    print(result)
     sns.set()
     fig,ax = plt.subplots()
     plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -21,7 +22,7 @@ def getHeatMap(CM:List[List[int]],labels:List[any],path:str) ->None:
 
 
 if __name__ == "__main__":
-    """CM = [
+    CM = [
 [855,16,22,15,10,4,3,13,49,13],
 [6,918,2,5,2,1,2,1,16,47],
 [64,1,721,46,66,31,32,25,12,2],
@@ -32,7 +33,8 @@ if __name__ == "__main__":
 [8,2,4,14,25,23,2,917,1,4],
 [37,18,4,7,1,0,4,5,909,15],
 [19,45,1,8,3,1,6,5,20,892]
-]"""
-    CM = None
-    labels = ["飞机","汽车","鸟","猫","鹿","狗","蛙","马","羊","卡车"]
+]
+    # CM = None
+    # labels = ["飞机","汽车","鸟","猫","鹿","狗","蛙","马","羊","卡车"]
+    labels = None
     getHeatMap(CM,labels,"test.png")
