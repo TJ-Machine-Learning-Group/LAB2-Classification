@@ -3,11 +3,11 @@ import os
 CWD = "./"
 
 label_num = 10
-epoch = 40
+epoch = 100
 learn_rate = 0.002
 weight_decay = 0
-model_savepath = os.path.join(CWD, "cnn_new.pth")
 batch_size = 200
+
 testdata_path = os.path.join(CWD, "mnist\\test")
 traindata_path = os.path.join(CWD, "mnist\\train")
 
