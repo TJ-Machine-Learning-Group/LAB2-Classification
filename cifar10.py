@@ -9,8 +9,7 @@ from tqdm import tqdm
 from torch.autograd import Variable
 import ssl
 
-import model_cnn
-import lenet
+from models import *
 
 
 def prepare_cifar10():
@@ -48,9 +47,11 @@ def Test(model, criterion, test_loader, test_count, model_savepath: str):
         # use GPU
         img, label = data
         with torch.no_grad():
-            img = Variable(img).cuda()
+            if config.use_cuda == True:
+                img = Variable(img).cuda()
         with torch.no_grad():
-            label = Variable(label).cuda()
+            if config.use_cuda == True:
+                label = Variable(label).cuda()
 
         # forward
         result = model(img)
@@ -64,7 +65,7 @@ def Test(model, criterion, test_loader, test_count, model_savepath: str):
         correct = (pred == label).sum()
         val_accuracy += correct.item()
 
-        for j in range(config.batch_size):
+        for j in range(img.shape[0]):
             confusion_matrix0[label[j]][pred[j]] += 1
         # print
         #print('Validate: {} batch, Loss: {:.6f}, Accuracy: {:.6f}'.format(i, loss.item() * label.size(0) / (len(label)), correct.item() / (len(label))))
@@ -97,9 +98,13 @@ def Train(model, criterion, train_loader, train_count, model_savepath: str):
         epoch_accuracy = 0.0
         for i, data in tqdm(enumerate(train_loader, 1)):
             #use GPU
+
             img, label = data
-            img = img.cuda()
-            label = label.cuda()
+
+            if config.use_cuda == True:
+                img = img.cuda()
+                label = label.cuda()
+
             img = Variable(img)
             label = Variable(label)
 
@@ -115,7 +120,7 @@ def Train(model, criterion, train_loader, train_count, model_savepath: str):
             correct = (pred == label).sum()
             epoch_accuracy += correct.item()
             if epoch == epochs - 1:
-                for j in range(config.batch_size):
+                for j in range(img.shape[0]):
                     confusion_matrix[label[j]][pred[j]] += 1
 
             #back propagation
@@ -130,6 +135,9 @@ def Train(model, criterion, train_loader, train_count, model_savepath: str):
         #train result
         print('Finish {} epoch, Loss: {:.6f}, Accuracy: {:.6f}'.format(epoch + 1, epoch_loss / train_count, epoch_accuracy / train_count))
 
+        #save model
+        torch.save(model.state_dict(), model_savepath)  #防止等太久 先存下来
+
     print('Train Process End\n')
     print('Confusion Matrix\n')
     for i in range(10):
@@ -140,18 +148,30 @@ def Train(model, criterion, train_loader, train_count, model_savepath: str):
 
 
 if __name__ == '__main__':
-
+    models = [
+        #sample_CNN(),
+        DenseNet121(),  #out of cuda memory
+        #DPN26(),
+        EfficientNetB0(),  #out of cuda memory
+        #GoogLeNet(),
+        #LeNet(),
+        #MobileNet(),
+        #MobileNetV2(),
+        DPN92(),  #out of cuda memory
+        SENet18(),
+        ShuffleNetV2(1)
+    ]
     # prepare data
     train_loader, train_count, test_loader, test_count = prepare_cifar10()
 
     #prepare model
-    #model = model_cnn.CNN()
-    model = lenet.LeNet()
-    model = model.cuda()  #gpu
-    model_savepath = model.name + ".pth"
+    for model in models:
+        if config.use_cuda == True:
+            model = model.cuda()  #gpu
+        model_savepath = config.model_savedir + model.name + ".pth"
 
-    #prepare loss func
-    criterion = nn.CrossEntropyLoss()
+        #prepare loss func
+        criterion = nn.CrossEntropyLoss()
 
-    Train(model, criterion, train_loader, train_count, model_savepath)
-    Test(model, criterion, test_loader, test_count, model_savepath)
+        #Train(model, criterion, train_loader, train_count, model_savepath)#注释掉训练部分
+        Test(model, criterion, test_loader, test_count, model_savepath)
