@@ -4,6 +4,7 @@ CWD = "./"
 model_savedir = "./model-results/"
 label_num = 10
 epoch = 50
+hasdata=True
 learn_rate = 0.002
 weight_decay = 0
 batch_size = 64

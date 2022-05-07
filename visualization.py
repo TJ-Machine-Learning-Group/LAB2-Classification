@@ -35,14 +35,16 @@ class visual(object):
         self.labels = labels
         self.name = name
 
-    def getHeatMap(self, path: str) -> None:
+    def getHeatMap(self, pathdir: str) -> None:
+        if os.path.exists(pathdir) == False:
+            os.mkdir(pathdir)
         fig, ax = plt.subplots()
         plt.rcParams['font.sans-serif'] = ['SimHei']
         sns.heatmap(self.ConMat, annot=True, ax=ax, fmt="d")  # 画热力图
         ax.set_title('confusion matrix')  # 标题
         ax.set_xlabel('predict')  # x 轴
         ax.set_ylabel('true')  # y 轴
-        plt.savefig(path)
+        plt.savefig(f"{pathdir}/{self.name}.png")
         plt.close()
 
     def getPrecision(self, label: Union[any, None] = None) -> float:
@@ -66,8 +68,10 @@ class visual(object):
     def getAcc(self) -> float:
         return sum([self.ConMat[i][i] for i in self.labels]) / self.ConMat.values.sum()
 
-    def save(self, dir: str) -> None:
-        self.ConMat.to_csv(f"{dir}/{self.name}.csv")
+    def save(self, pathdir: str) -> None:
+        if os.path.exists(pathdir) == False:
+            os.mkdir(pathdir)
+        self.ConMat.to_csv(f"{pathdir}/{self.name}.csv")
 
     def get(self, path: str) -> None:
         filename = os.path.basename(path)
@@ -75,7 +79,9 @@ class visual(object):
         self.ConMat = pd.read_csv(path, index_col=0)
         self.labels = list(self.ConMat.index)
 
-    def show(self, dir: str) -> None:
+    def show(self, pathdir: str) -> None:
+        if os.path.exists(pathdir) == False:
+            os.mkdir(pathdir)
         Prec = [self.getPrecision(label) for label in self.labels]
         load_font_config()
         fig, ax = plt.subplots(ncols=2, figsize=(14, 8))
@@ -86,11 +92,14 @@ class visual(object):
         ax[1].set_title(f"Recall of {self.name} for all classes")
         rects = ax[1].bar(self.labels, Reca)
         autolabel(rects, ax[1], Reca)
-        plt.savefig(f"{dir}/{self.name}.png")
+        plt.savefig(f"{pathdir}/{self.name}.png")
         plt.close()
 
 
 def drawPrec(vislist: List[visual], path: str) -> None:
+    pathdir = os.path.split(path)[0]
+    if os.path.exists(pathdir) == False:
+        os.mkdir(pathdir)
     dic = {vis.name: vis.getPrecision() for vis in vislist}
     fig, ax = plt.subplots()
     ax.set_title("mean Precision of all models")
@@ -101,6 +110,9 @@ def drawPrec(vislist: List[visual], path: str) -> None:
 
 
 def drawReca(vislist: List[visual], path: str) -> None:
+    pathdir = os.path.split(path)[0]
+    if os.path.exists(pathdir) == False:
+        os.mkdir(pathdir)
     dic = {vis.name: vis.getRecall() for vis in vislist}
     fig, ax = plt.subplots()
     ax.set_title("mean Recall of all models")
@@ -111,6 +123,9 @@ def drawReca(vislist: List[visual], path: str) -> None:
 
 
 def drawAcc(vislist: List[visual], path: str) -> None:
+    pathdir = os.path.split(path)[0]
+    if os.path.exists(pathdir) == False:
+        os.mkdir(pathdir)
     dic = {vis.name: vis.getAcc() for vis in vislist}
     fig, ax = plt.subplots()
     ax.set_title("accruary of all models")
@@ -121,6 +136,9 @@ def drawAcc(vislist: List[visual], path: str) -> None:
 
 
 def drawFs(vislist: List[visual], path: str, beta: float = 1) -> None:
+    pathdir = os.path.split(path)[0]
+    if os.path.exists(pathdir) == False:
+        os.mkdir(pathdir)
     dic = dict()
     for i in vislist:
         p, r = i.getPrecision(), i.getRecall()

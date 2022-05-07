@@ -10,8 +10,7 @@ from torch.autograd import Variable
 import ssl
 
 from models import *
-
-
+import visualization
 def prepare_cifar10():
     ssl._create_default_https_context = ssl._create_unverified_context
     transform = transforms.Compose([
@@ -149,29 +148,43 @@ def Train(model, criterion, train_loader, train_count, model_savepath: str):
 
 if __name__ == '__main__':
     models = [
-        #sample_CNN(),
-        DenseNet121(),  #out of cuda memory
+        sample_CNN(),
+        #DenseNet121(),  #out of cuda memory
         #DPN26(),
-        EfficientNetB0(),  #out of cuda memory
+        #EfficientNetB0(),  #out of cuda memory
         #GoogLeNet(),
-        #LeNet(),
-        #MobileNet(),
-        #MobileNetV2(),
-        DPN92(),  #out of cuda memory
+        LeNet(),
+        MobileNet(),
+        MobileNetV2(),
+        #DPN92(),  #out of cuda memory
         SENet18(),
         ShuffleNetV2(1)
     ]
     # prepare data
     train_loader, train_count, test_loader, test_count = prepare_cifar10()
-
+    vislist = list()
     #prepare model
     for model in models:
-        if config.use_cuda == True:
-            model = model.cuda()  #gpu
-        model_savepath = config.model_savedir + model.name + ".pth"
+        if config.hasdata == False:
+            if config.use_cuda == True:
+                model = model.cuda()  #gpu
+            model_savepath = config.model_savedir + model.name + ".pth"
 
-        #prepare loss func
-        criterion = nn.CrossEntropyLoss()
+            #prepare loss func
+            criterion = nn.CrossEntropyLoss()
 
-        #Train(model, criterion, train_loader, train_count, model_savepath)#注释掉训练部分
-        Test(model, criterion, test_loader, test_count, model_savepath)
+            #Train(model, criterion, train_loader, train_count, model_savepath)#注释掉训练部分
+            visCM = Test(model, criterion, test_loader, test_count, model_savepath)
+            vis = visualization.visual(visCM, config.labels, model.name)
+            # vis.getHeatMap("heatmap/{}.png".format(model.name))
+            vis.save("result")
+        else:
+            vis = visualization.visual()
+            vis.get(f"result/{model.name}.csv")
+        vis.show("result/analyze")
+        vis.getHeatMap("result/heatmap")
+        vislist.append(vis)
+    visualization.drawPrec(vislist, "result/Prec.png")
+    visualization.drawReca(vislist, "result/Reca.png")
+    visualization.drawAcc(vislist, "result/Acc.png")
+    visualization.drawFs(vislist, "result/Fs.png")
