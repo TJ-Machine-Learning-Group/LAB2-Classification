@@ -76,6 +76,7 @@ def Test(model, criterion, test_loader, test_count, model_savepath: str):
     print('Confusion Matrix\n')
     for i in range(10):
         print(confusion_matrix0[i])
+    return confusion_matrix0
 
 
 def Train(model, criterion, train_loader, train_count, model_savepath: str):
@@ -145,8 +146,7 @@ def Train(model, criterion, train_loader, train_count, model_savepath: str):
     #save model
     torch.save(model.state_dict(), model_savepath)
 
-
-if __name__ == '__main__':
+def main():
     models = [
         sample_CNN(),
         #DenseNet121(),  #out of cuda memory
@@ -172,10 +172,10 @@ if __name__ == '__main__':
 
             #prepare loss func
             criterion = nn.CrossEntropyLoss()
-            # NOTE 这里注释掉训练部分, 要训练的记得取消这里的注释
-            #Train(model, criterion, train_loader, train_count, model_savepath) 
+            # NOTE 训练完后可以注释掉训练部分, 要训练的记得取消这里的注释
+            Train(model, criterion, train_loader, train_count, model_savepath) 
             visCM = Test(model, criterion, test_loader, test_count, model_savepath)
-            vis = visualization.visual(visCM, config., model.name)
+            vis = visualization.visual(visCM, config.labels, model.name)
             # vis.getHeatMap("heatmap/{}.png".format(model.name))
             vis.save("result")
         else:
@@ -188,3 +188,6 @@ if __name__ == '__main__':
     visualization.drawReca(vislist, "result/Reca.png")
     visualization.drawAcc(vislist, "result/Acc.png")
     visualization.drawFs(vislist, "result/Fs.png")
+
+if __name__ == '__main__':
+    main()
