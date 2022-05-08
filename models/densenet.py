@@ -33,9 +33,9 @@ class Transition(nn.Module):
         out = F.avg_pool2d(out, 2)
         return out
 
-
+import config
 class DenseNet(nn.Module):
-    def __init__(self, block, nblocks, growth_rate=12, reduction=0.5, num_classes=10):
+    def __init__(self, block, nblocks, growth_rate=12, reduction=0.5, num_classes=config.label_num):
         super(DenseNet, self).__init__()
         self.growth_rate = growth_rate
 

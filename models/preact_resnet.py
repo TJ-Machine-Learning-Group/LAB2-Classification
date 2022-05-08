@@ -1,15 +1,10 @@
-'''Pre-activation ResNet in PyTorch.
-
-Reference:
-[1] Kaiming He, Xiangyu Zhang, Shaoqing Ren, Jian Sun
-    Identity Mappings in Deep Residual Networks. arXiv:1603.05027
-'''
+'''Pre-activation ResNet in PyTorch.'''
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchsummary import summary
 
-
+import config
 class PreActBlock(nn.Module):
     '''Pre-activation version of the BasicBlock.'''
     expansion = 1
@@ -64,7 +59,7 @@ class PreActBottleneck(nn.Module):
 
 
 class PreActResNet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=config.label_num):
         super(PreActResNet, self).__init__()
         self.in_planes = 64
 

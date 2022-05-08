@@ -1,7 +1,4 @@
-'''ShuffleNetV2 in PyTorch.
-
-See the paper "ShuffleNet V2: Practical Guidelines for Efficient CNN Architecture Design" for more details.
-'''
+'''ShuffleNetV2 in PyTorch.'''
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -83,10 +80,10 @@ class DownBlock(nn.Module):
         out = torch.cat([out1, out2], 1)
         out = self.shuffle(out)
         return out
-
+import config
 
 class ShuffleNetV2(nn.Module):
-    def __init__(self, net_size):
+    def __init__(self, net_size,num_classes=config.label_num):
         super(ShuffleNetV2, self).__init__()
         out_channels = configs[net_size]['out_channels']
         num_blocks = configs[net_size]['num_blocks']
@@ -99,7 +96,7 @@ class ShuffleNetV2(nn.Module):
         self.layer3 = self._make_layer(out_channels[2], num_blocks[2])
         self.conv2 = nn.Conv2d(out_channels[2], out_channels[3], kernel_size=1, stride=1, padding=0, bias=False)
         self.bn2 = nn.BatchNorm2d(out_channels[3])
-        self.linear = nn.Linear(out_channels[3], 10)
+        self.linear = nn.Linear(out_channels[3], num_classes)
 
         self.name = "ShuffleNetV2"
 

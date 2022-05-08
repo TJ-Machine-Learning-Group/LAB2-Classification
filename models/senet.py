@@ -1,6 +1,5 @@
 '''SENet in PyTorch.
-
-SENet is the winner of ImageNet-2017. The paper is not released yet.
+SENet is the winner of ImageNet-2017.
 '''
 import torch
 import torch.nn as nn
@@ -70,9 +69,9 @@ class PreActBlock(nn.Module):
         out += shortcut
         return out
 
-
+import config
 class SENet(nn.Module):
-    def __init__(self, block, num_blocks, num_classes=10):
+    def __init__(self, block, num_blocks, num_classes=config.label_num):
         super(SENet, self).__init__()
         self.in_planes = 64
 

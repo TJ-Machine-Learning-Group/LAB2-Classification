@@ -1,11 +1,8 @@
-'''EfficientNet in PyTorch.
-
-Paper: "EfficientNet: Rethinking Model Scaling for Convolutional Neural Networks".
-'''
+'''EfficientNet in PyTorch.'''
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+import config
 
 class Block(nn.Module):
     '''expand + depthwise + pointwise + squeeze-excitation'''
@@ -46,7 +43,7 @@ class Block(nn.Module):
 
 
 class EfficientNet(nn.Module):
-    def __init__(self, cfg, num_classes=10):
+    def __init__(self, cfg, num_classes=config.label_num):
         super(EfficientNet, self).__init__()
         self.cfg = cfg
         self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1, bias=False)

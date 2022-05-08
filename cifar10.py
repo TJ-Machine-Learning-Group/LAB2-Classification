@@ -150,9 +150,9 @@ if __name__ == '__main__':
     models = [
         sample_CNN(),
         #DenseNet121(),  #out of cuda memory
-        #DPN26(),
+        #DPN26(),#out of cuda memory
         #EfficientNetB0(),  #out of cuda memory
-        #GoogLeNet(),
+        #GoogLeNet(),#out of cuda memory
         LeNet(),
         MobileNet(),
         MobileNetV2(),
@@ -172,10 +172,10 @@ if __name__ == '__main__':
 
             #prepare loss func
             criterion = nn.CrossEntropyLoss()
-
-            #Train(model, criterion, train_loader, train_count, model_savepath)#注释掉训练部分
+            # NOTE 这里注释掉训练部分, 要训练的记得取消这里的注释
+            #Train(model, criterion, train_loader, train_count, model_savepath) 
             visCM = Test(model, criterion, test_loader, test_count, model_savepath)
-            vis = visualization.visual(visCM, config.labels, model.name)
+            vis = visualization.visual(visCM, config., model.name)
             # vis.getHeatMap("heatmap/{}.png".format(model.name))
             vis.save("result")
         else:
