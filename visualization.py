@@ -1,3 +1,4 @@
+from matplotlib.container import BarContainer
 import seaborn as sns
 import matplotlib.pyplot as plt
 from typing import List, Union
@@ -15,7 +16,7 @@ def load_font_config() -> None:
     plt.rcParams.update(config)
 
 
-def autolabel(rects, ax, labels):
+def autolabel(rects:BarContainer, ax:plt.Axes, labels:List[any])->None:
     for i, rect in enumerate(rects):
         height = rect.get_height()
         if isinstance(labels[i], float):
