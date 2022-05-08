@@ -173,9 +173,9 @@ if __name__ == '__main__':
             #prepare loss func
             criterion = nn.CrossEntropyLoss()
             # NOTE 这里注释掉训练部分, 要训练的记得取消这里的注释
-            #Train(model, criterion, train_loader, train_count, model_savepath) 
+            #Train(model, criterion, train_loader, train_count, model_savepath)
             visCM = Test(model, criterion, test_loader, test_count, model_savepath)
-            vis = visualization.visual(visCM, config., model.name)
+            vis = visualization.visual(visCM, config.labels, model.name)
             # vis.getHeatMap("heatmap/{}.png".format(model.name))
             vis.save("result")
         else:
