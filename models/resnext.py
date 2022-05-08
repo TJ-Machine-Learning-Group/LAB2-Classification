@@ -1,7 +1,4 @@
-'''ResNeXt in PyTorch.
-
-See the paper "Aggregated Residual Transformations for Deep Neural Networks" for more details.
-'''
+'''ResNeXt in PyTorch.'''
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -37,9 +34,9 @@ class Block(nn.Module):
         out = F.relu(out)
         return out
 
-
+import config
 class ResNeXt(nn.Module):
-    def __init__(self, num_blocks, cardinality, bottleneck_width, num_classes=10):
+    def __init__(self, num_blocks, cardinality, bottleneck_width, num_classes=config.label_num):
         super(ResNeXt, self).__init__()
         self.cardinality = cardinality
         self.bottleneck_width = bottleneck_width
