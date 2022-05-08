@@ -147,9 +147,3 @@ def drawFs(vislist: List[visual], path: str, beta: float = 1) -> None:
     autolabel(rects, ax, list(dic.values()))
     plt.savefig(path)
     plt.close()
-
-
-if __name__ == "__main__":
-    vis = visual()
-    vis.get("result/LeNet.csv")
-    print(vis.labels)
